@@ -29,3 +29,16 @@ For the workers MCP, we're setting the machine roles to worker, the maxUnavailab
 You can add more MCPs to the machineConfigPools field as needed, and the machineconfigpool.yaml template will automatically generate the corresponding YAML files for each MCP
 
 ```
+
+```
+
+Simpler directory structure: By keeping all the template-related files in the same directory, it's easier to manage the chart and make changes to the templates and values files.
+
+Easier to manage values and templates: The anchor aliases and variables are now defined in the same file as the template, which makes it easier to modify the template and the variables together.
+
+Easier to reuse code: The anchor aliases and variables can be reused in other templates that use similar configuration options, so by defining them in the same file as the template, it makes it easier to reuse the code and maintain consistency across multiple templates.
+
+Overall, keeping the anchor aliases and variables in the same file as the template helps to make the chart more modular and easier to manage.
+
+
+```
