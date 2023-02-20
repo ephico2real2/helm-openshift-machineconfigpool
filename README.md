@@ -16,3 +16,16 @@ We're using the template function to output the MCP name and machine roles, and 
 We're also using a lookup function to verify that the node selector label specified in the values.yaml file exists on the nodes in the cluster. We're using the lookup function to retrieve the value of the node label, and we're using the if function and the fail function to fail the template if the label is not found.
 
 ```
+
+sample values.yaml
+
+```
+In this example, we're using the machineConfigPools field to specify the configuration options for each MCP. We have two MCPs: one called infra and one called workers.
+
+For the infra MCP, we're setting the machine roles to worker and infra, the node selector to node-role.kubernetes.io/infra, and the paused field to true.
+
+For the workers MCP, we're setting the machine roles to worker, the maxUnavailable field to 1, and the node selector to node-role.kubernetes.io/worker.
+
+You can add more MCPs to the machineConfigPools field as needed, and the machineconfigpool.yaml template will automatically generate the corresponding YAML files for each MCP
+
+```

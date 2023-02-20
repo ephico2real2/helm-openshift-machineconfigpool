@@ -1,0 +1,17 @@
+machineConfigPools:
+  - mcpName: infra
+    machineRoles:
+      - worker
+      - infra
+    nodeSelector:
+      key: node-role.kubernetes.io/infra
+      value: ""
+    paused: true
+  - mcpName: workers
+    machineRoles:
+      - worker
+    maxUnavailable: 1
+    nodeSelector:
+      key: node-role.kubernetes.io/worker
+      value: ""
+
