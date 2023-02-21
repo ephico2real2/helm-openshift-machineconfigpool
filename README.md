@@ -2,43 +2,37 @@
 Helm to Chart to manage machineconfigpool on openshift
 
 ```
+This is a Helm template for the machineconfigpool.yaml file that creates a MachineConfigPool resource for each entry in the machineConfigPools array in the values.yaml file.
 
-In this version, we're defining anchor aliases for commonly-used MCP fields using the define function. We're defining mcpDefaults to set default values for maxUnavailable, paused, and nodeSelector, and we're using the & operator to create an anchor alias called mcpDefaults.
+Explanation:
 
-We're also defining mcpName and machineRoles using the define function, and using them as template functions to output the MCP name and machine roles, respectively.
+{{- range .Values.machineConfigPools }} starts a loop over the machineConfigPools array in the values.yaml file.
 
-In the range loop, we're using the dict function to create a new $mcpConfig dictionary for the current MCP, which includes the MCP name, machine roles, and the default values from mcpDefaults.
+name: {{ .mcpName }} sets the name of the MachineConfigPool to the value of the mcpName field in the current iteration of the loop.
 
-We're then using the merge function to merge the $mcpConfig dictionary with the configuration options provided in the values.yaml file, using the | default (dict) syntax to ensure that the merge operation is performed only if $element is not nil.
+values: {{ .machineRoles | toJson }} sets the value of the values field in the matchExpressions list to the value of the machineRoles 
+field in the current iteration of the loop. The toJson function is used to convert the array to a JSON list.
 
-We're using the template function to output the MCP name and machine roles, and we're using the toYaml function and the nindent function to format the machine roles list and node selector dictionary, respectively.
+nodeSelector: specifies the node selector for the MachineConfigPool. If the nodeSelector field is not present or is empty, the template will throw an error with the message "nodeSelector is required for all MachineConfigPools".
 
-We're also using a lookup function to verify that the node selector label specified in the values.yaml file exists on the nodes in the cluster. We're using the lookup function to retrieve the value of the node label, and we're using the if function and the fail function to fail the template if the label is not found.
+matchLabels: specifies the labels to match in the node selector. The nindent function is used to indent the block by six spaces.
+
+paused: {{ .paused | default false }} sets the value of the paused field to the value of the paused field in the current iteration of the loop, or false if the paused field is not present. The default function is used to provide a default value.
+
+--- is used to separate each MachineConfigPool resource created by the loop.
 
 ```
 
 sample values.yaml
 
 ```
-In this example, we're using the machineConfigPools field to specify the configuration options for each MCP. We have two MCPs: one called infra and one called workers.
 
-For the infra MCP, we're setting the machine roles to worker and infra, the node selector to node-role.kubernetes.io/infra, and the paused field to true.
+In this example, we're using the machineConfigPools field to specify the configuration options for each MCP.
 
-For the workers MCP, we're setting the machine roles to worker, the maxUnavailable field to 1, and the node selector to node-role.kubernetes.io/worker.
+The code block is a YAML file defining a list of machineConfigPools that can be managed by the OpenShift cluster. Each machineConfigPool in the list has a name mcpName and a list of machineRoles that it can manage, including worker and custom roles. The nodeSelector field specifies a Kubernetes label and value that should be present on the nodes to be managed by this pool, with the exception of the infra pool which has a blank value. The paused field specifies whether the machineConfigPool should be paused or not.
+
+In addition, the storage machineConfigPool specifies a maxUnavailable value of 1, which means only 1 node at a time in this pool can be unavailable. Finally, custom2 machineConfigPool has a different node selector key node-role.kubernetes.io/custom2 and doesn't specify a value, which means any value will be accepted for this label.
 
 You can add more MCPs to the machineConfigPools field as needed, and the machineconfigpool.yaml template will automatically generate the corresponding YAML files for each MCP
-
-```
-
-```
-
-Simpler directory structure: By keeping all the template-related files in the same directory, it's easier to manage the chart and make changes to the templates and values files.
-
-Easier to manage values and templates: The anchor aliases and variables are now defined in the same file as the template, which makes it easier to modify the template and the variables together.
-
-Easier to reuse code: The anchor aliases and variables can be reused in other templates that use similar configuration options, so by defining them in the same file as the template, it makes it easier to reuse the code and maintain consistency across multiple templates.
-
-Overall, keeping the anchor aliases and variables in the same file as the template helps to make the chart more modular and easier to manage.
-
 
 ```
