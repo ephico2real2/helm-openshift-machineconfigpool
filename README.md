@@ -23,7 +23,9 @@ paused: {{ .paused | default false }} sets the value of the paused field to the 
 
 ```
 
-sample values.yaml
+sample values.yaml 
+
+`` helm template my-release --values sample-values.yaml . --debug  ``
 
 ```
 
