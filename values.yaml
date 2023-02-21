@@ -21,5 +21,10 @@ machineConfigPools:
       - storage
     maxUnavailable: 1
     nodeSelector:
-      key: node-role.kubernetes.io/storage
-      value: "true"
+     key: node-role.kubernetes.io/storage
+     value: "true"
+  - mcpName: custom2
+    machineRoles: [worker, custom2]
+    nodeSelector:
+      key: node-role.kubernetes.io/custom2
+    #  value: custom2

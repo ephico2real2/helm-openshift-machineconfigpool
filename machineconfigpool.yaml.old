@@ -15,12 +15,10 @@ spec:
   maxUnavailable: null
   {{- end }}
   nodeSelector:
-    {{- if not .nodeSelector }}
-    {{- fail "nodeSelector is required for all MachineConfigPools" }}
-    {{- end }}
     matchLabels:
+      {{- if .nodeSelector }}
       {{ .nodeSelector.key }}: "{{ .nodeSelector.value }}"
+      {{- end }}
   paused: {{ .paused | default false }}
 ---
 {{- end }}
-
