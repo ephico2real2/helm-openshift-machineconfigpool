@@ -1,19 +1,22 @@
+{{- range .Values.machineConfigPools }}
 apiVersion: machineconfiguration.openshift.io/v1
 kind: MachineConfigPool
 metadata:
-  name: {{ .Values.machineConfigPools[0].mcpName }}
+  name: {{ .mcpName }}
 spec:
   machineConfigSelector:
     matchExpressions:
-      - { key: machineconfiguration.openshift.io/role, operator: In, values: {{ .Values.machineConfigPools[0].machineRoles | toYaml | nindent 6 }} }
-  {{- if .Values.machineConfigPools[0].maxUnavailable }}
-  maxUnavailable: {{ .Values.machineConfigPools[0].maxUnavailable }}
+      - {key: machineconfiguration.openshift.io/role, operator: In, values: {{ .machineRoles | toJson }} }
+  {{- if .maxUnavailable }}
+  maxUnavailable: {{ .maxUnavailable }}
+  {{- else }}
+  maxUnavailable: null
   {{- end }}
   nodeSelector:
-    matchLabels:
-      {{- $selector := .Values.machineConfigPools[0].nodeSelector }}
-      {{- if not (lookup "v1" "Node" "metadata" "labels" $selector.key) }}
-      {{- fail (printf "Node label %q not found" $selector.key) }}
-      {{- end }}
-      {{ $selector | toYaml | nindent 6 }}
-  paused: {{ .Values.machineConfigPools[0].paused }}
+    {{- if .nodeSelector }}
+    matchLabels: {{- .nodeSelector | toYaml | nindent 6 }}
+    {{- end }}
+  paused: {{ .paused | default "false" }}
+---
+{{- end }}
+

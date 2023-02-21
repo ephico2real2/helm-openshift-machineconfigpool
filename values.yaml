@@ -1,5 +1,13 @@
 machineConfigPools:
-  - mcpName: infra
+  - name: custom
+    machineRoles:
+      - worker
+      - custom
+    nodeSelector:
+      key: node-role.kubernetes.io/custom
+      value: custom1
+    paused: false
+  - name: infra
     machineRoles:
       - worker
       - infra
@@ -7,11 +15,11 @@ machineConfigPools:
       key: node-role.kubernetes.io/infra
       value: ""
     paused: true
-  - mcpName: workers
+  - name: workers
     machineRoles:
       - worker
+      - storage
     maxUnavailable: 1
     nodeSelector:
       key: node-role.kubernetes.io/worker
-      value: ""
-
+      value: "true"
