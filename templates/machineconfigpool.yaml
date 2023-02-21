@@ -9,11 +9,7 @@ spec:
       - key: machineconfiguration.openshift.io/role
         operator: In
         values: {{ .machineRoles | toJson }}
-  {{- if .maxUnavailable }}
-  maxUnavailable: {{ .maxUnavailable }}
-  {{- else }}
-  maxUnavailable: null
-  {{- end }}
+  maxUnavailable: {{ .maxUnavailable | default 1 }}
   nodeSelector:
     {{- if not .nodeSelector }}
     {{- fail "nodeSelector is required for all MachineConfigPools" }}
@@ -23,4 +19,3 @@ spec:
   paused: {{ .paused | default false }}
 ---
 {{- end }}
-

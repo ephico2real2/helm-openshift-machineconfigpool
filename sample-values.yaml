@@ -28,3 +28,4 @@ machineConfigPools:
     nodeSelector:
       key: node-role.kubernetes.io/custom2
     #  value: custom2
+    maxUnavailable: 5
