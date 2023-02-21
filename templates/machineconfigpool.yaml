@@ -6,17 +6,19 @@ metadata:
 spec:
   machineConfigSelector:
     matchExpressions:
-      - {key: machineconfiguration.openshift.io/role, operator: In, values: {{ .machineRoles | toJson }} }
+      - key: machineconfiguration.openshift.io/role
+        operator: In
+        values: {{ .machineRoles | toJson }}
   {{- if .maxUnavailable }}
   maxUnavailable: {{ .maxUnavailable }}
   {{- else }}
   maxUnavailable: null
   {{- end }}
   nodeSelector:
-    {{- if .nodeSelector }}
-    matchLabels: {{- .nodeSelector | toYaml | nindent 6 }}
-    {{- end }}
-  paused: {{ .paused | default "false" }}
+    matchLabels:
+      {{- if .nodeSelector }}
+      {{ .nodeSelector.key }}: "{{ .nodeSelector.value }}"
+      {{- end }}
+  paused: {{ .paused | default false }}
 ---
 {{- end }}
-
