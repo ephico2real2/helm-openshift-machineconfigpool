@@ -66,3 +66,46 @@ services:
     image: app:${NGINX_VERSION}
     ports:
       - "8082:80"
+
+
+
+
+image: java-tests-repository:latest
+
+before_script:
+  - apt-get update
+  - apt-get install -y maven
+
+stages:
+  - compline
+  - test
+
+compline:
+  stage: compline
+  script:
+    - javac -d /src/tests/suites/ -cp /lib/junit-4.12.jar /data/sets/users.java
+
+registration:
+  stage: test
+  script:
+    - mvn clean test -Dtest=functional -Ddata_sets=users
+
+payments:
+  stage: test
+  script:
+    - mvn clean test -Dtest=performance -Ddata_sets=users
+
+orders:
+  stage: test
+  script:
+    - mvn clean test -Dtest=orders -Ddata_sets=users
+
+test:
+  stage: test
+  script: echo "All tests are completed."
+  parallel:
+    matrix:
+      - JOB_NAME: registration
+      - JOB_NAME: payments
+      - JOB_NAME: orders
+
