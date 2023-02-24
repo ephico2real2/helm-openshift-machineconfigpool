@@ -109,3 +109,32 @@ test:
       - JOB_NAME: payments
       - JOB_NAME: orders
 
+
+
+
+
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webpage-server
+  namespace: default
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.15
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: webpage
+      mountPath: /var/www/html
+      readOnly: true
+  volumes:
+  - name: webpage
+    persistentVolumeClaim:
+      claimName: webpage
+
+
+
