@@ -22,6 +22,11 @@ paused: {{ .paused | default false }} sets the value of the paused field to the 
 --- is used to separate each MachineConfigPool resource created by the loop.
 
 ```
+The Folders -  env/rnd; env/uat/; env/qa etc represent the required OCP values.yaml cluster in a mono-repo for GitOps.
+
+assumpption is that we are preserving the worker label, so we are using the additional labels such as 'custom' in conjuction with worker label to create the required mcp .i.e. mcp called custom will select the label "node-role.kubernetes.io/custom" and "node-role.kubernetes.io/worker".
+
+please adjust values.yaml to suit your need.
 
 sample values.yaml 
 
