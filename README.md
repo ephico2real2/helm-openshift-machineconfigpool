@@ -2,6 +2,7 @@
 Helm to Chart to manage machineconfigpool on openshift
 
 ```
+
 This is a Helm template for the machineconfigpool.yaml file that creates a MachineConfigPool resource for each entry in the machineConfigPools array in the values.yaml file.
 
 Explanation:
@@ -22,13 +23,42 @@ paused: {{ .paused | default false }} sets the value of the paused field to the 
 --- is used to separate each MachineConfigPool resource created by the loop.
 
 ```
-The Folders -  env/rnd; env/uat/; env/qa etc represent the required OCP values.yaml cluster in a mono-repo for GitOps.
 
-assumpption is that we are preserving the worker label, so we are using the additional labels such as 'custom' in conjuction with worker label to create the required mcp .i.e. mcp called custom will select the label "node-role.kubernetes.io/custom" and "node-role.kubernetes.io/worker".
+```
+
+The Folders -  env/rnd/; env/uat/; env/qa/ etc represent the required folders containing values.yaml for rnd, uat and qa cluster in a mono-repo for GitOps.
+
+The assumpption is that we are preserving the worker label, so we are using the additional labels such as 'custom' (node-role.kubernetes.io/custom) in conjuction with worker label to create the required mcp .e.g for any generic called "custom" will select the label "node-role.kubernetes.io/custom" and "node-role.kubernetes.io/worker".
 
 please adjust values.yaml to suit your need.
 
-sample values.yaml 
+
+```
+
+rnd values.yaml 
+
+```yaml
+
+machineConfigPools:
+  - mcpName: infra
+    machineRoles:
+      - worker
+      - infra
+    nodeSelector:
+      key: node-role.kubernetes.io/infra
+      value: ""
+    paused: true
+  - mcpName: app
+    machineRoles:
+      - worker
+      - app
+    maxUnavailable: 1
+    nodeSelector:
+      key: node-role.kubernetes.io/app
+      value: "true"
+
+```
+
 
 `` helm template my-release --values sample-values.yaml . --debug  ``
 

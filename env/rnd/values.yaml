@@ -7,11 +7,12 @@ machineConfigPools:
       key: node-role.kubernetes.io/infra
       value: ""
     paused: true
-  - mcpName: workers
+  - mcpName: app
     machineRoles:
       - worker
+      - app
     maxUnavailable: 1
     nodeSelector:
-      key: node-role.kubernetes.io/worker
-      value: ""
+      key: node-role.kubernetes.io/app
+      value: "true"
 
